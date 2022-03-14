@@ -42,6 +42,12 @@ class Settings extends Model
     public $anchorLinkText = '#';
 
     /**
+     * @var boolean Output the Id to the heading instead of a anchor link.
+     * (Default is '#'.)
+     */
+    public $anchorStyleSimple = false;
+
+    /**
      * @var string The title/alt text that anchor links should have.
      * If {heading} is included, it will be replaced with the heading text
      * the link is associated with. (Default is 'Direct link to {heading}'.)
