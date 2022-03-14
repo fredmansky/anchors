@@ -41,6 +41,11 @@ class Parser extends Component
     public $anchorLinkText = '#';
 
     /**
+     * @var boolean
+     */
+    public $anchorStyleSimple = false;
+
+    /**
      * @var string
      */
     public $anchorLinkTitleText = 'Direct link to {heading}';
@@ -64,20 +69,27 @@ class Parser extends Component
 
         return preg_replace_callback('/<(' . implode('|', $tags) . ')([^>]*)>(.+?)<\/\1>/', function(array $match) use ($language) {
             $anchorName = $this->generateAnchorName($match[3], $language);
-            // $heading = strip_tags(str_replace(['&nbsp;', ' '], ' ', $match[3]));
-            /*$link = Html::tag('a', $this->anchorLinkText, [
-                'class' => $this->anchorLinkClass,
-                'title' => Craft::t('anchors', $this->anchorLinkTitleText, ['heading' => $heading]),
-                'href' => "#$anchorName",
-            ]);*/
 
-            return
-                // Don't create a link
-                /*Html::a('', null, [
-                    'class' => $this->anchorClass,
-                    'id' => $anchorName,
-                ]) .*/
-                "<$match[1]$match[2] id=\"$anchorName\">" . $match[3] . "</$match[1]>";
+            if ($this->anchorStyleSimple === false) {
+                $heading = strip_tags(str_replace(['&nbsp;', ' '], ' ', $match[3]));
+                $link = Html::tag('a', $this->anchorLinkText, [
+                    'class' => $this->anchorLinkClass,
+                    'title' => Craft::t('anchors', $this->anchorLinkTitleText, ['heading' => $heading]),
+                    'href' => "#$anchorName",
+                ]);
+
+                return
+                    Html::a('', null, [
+                        'class' => $this->anchorClass,
+                        'id' => $anchorName,
+                    ]) .
+                    "<$match[1]$match[2]>" .
+                    ($this->anchorLinkPosition === Settings::POS_BEFORE ? "$link $match[3]" : "$match[3] $link") .
+                    "</$match[1]>";
+            } else {
+                return
+                    "<$match[1]$match[2] id=\"$anchorName\">" . $match[3] . "</$match[1]>";
+            }
         }, $html);
     }
 
