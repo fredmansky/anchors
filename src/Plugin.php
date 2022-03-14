@@ -39,6 +39,7 @@ class Plugin extends \craft\base\Plugin
             'anchorLinkClass' => $settings->anchorLinkClass,
             'anchorLinkText' => $settings->anchorLinkText,
             'anchorLinkTitleText' => $settings->anchorLinkTitleText,
+            'anchorStyleSimple' => $settings->anchorStyleSimple,
         ]);
     }
 
