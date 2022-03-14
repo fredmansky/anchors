@@ -53,7 +53,7 @@ class Parser extends Component
      *
      * @param string $html The HTML to parse
      * @param string|string[] $tags The tags to add anchor links to.
-     * @param string|null $language The content language, used when converting non-ASCII characters to ASCII
+     * @param string|null The content language, used when converting non-ASCII characters to ASCII
      * @return string The parsed HTML.
      */
     public function parseHtml(string $html, $tags = 'h1,h2,h3', ?string $language = null): string
@@ -64,21 +64,20 @@ class Parser extends Component
 
         return preg_replace_callback('/<(' . implode('|', $tags) . ')([^>]*)>(.+?)<\/\1>/', function(array $match) use ($language) {
             $anchorName = $this->generateAnchorName($match[3], $language);
-            $heading = strip_tags(str_replace(['&nbsp;', ' '], ' ', $match[3]));
-            $link = Html::tag('a', $this->anchorLinkText, [
+            // $heading = strip_tags(str_replace(['&nbsp;', ' '], ' ', $match[3]));
+            /*$link = Html::tag('a', $this->anchorLinkText, [
                 'class' => $this->anchorLinkClass,
                 'title' => Craft::t('anchors', $this->anchorLinkTitleText, ['heading' => $heading]),
                 'href' => "#$anchorName",
-            ]);
+            ]);*/
 
             return
-                Html::a('', null, [
+                // Don't create a link
+                /*Html::a('', null, [
                     'class' => $this->anchorClass,
                     'id' => $anchorName,
-                ]) .
-                "<$match[1]$match[2]>" .
-                ($this->anchorLinkPosition === Settings::POS_BEFORE ? "$link $match[3]" : "$match[3] $link") .
-                "</$match[1]>";
+                ]) .*/
+                "<$match[1]$match[2] id=\"$anchorName\">" . $match[3] . "</$match[1]>";
         }, $html);
     }
 
